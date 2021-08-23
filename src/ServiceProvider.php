@@ -28,8 +28,16 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider implements Def
         $this->mergeConfigFrom(__DIR__ . '/../config/myriad-soap.php', 'myriad-soap');
 
         $this->app->singleton('myriad_soap', function ($app) {
+            $options = $app['config']['myriad-soap']['options'] ?? [];
+
+            if (!empty($app['config']['myriad-soap']['use_http_version_1']) && !isset($options['stream_context'])) {
+                $options['stream_context'] = stream_context_create(
+                    [ 'http' => [ 'protocol_version' => 1.0 ] ]
+                );
+            }
+
             return new MyriadApi(
-                new MyriadSoapClient(null, $app['config']['myriad-soap']['options'])
+                new MyriadSoapClient(null, $options)
             );
         });
     }
