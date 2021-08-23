@@ -27,8 +27,8 @@ class MyriadApi
      */
     public function functionsSet(string $class): FunctionsSet
     {
-        if (! is_subclass_of($class, FunctionsSet::class)) {
-            throw new MyriadSoapException("class should extend FunctionsSet");
+        if (!is_subclass_of($class, FunctionsSet::class)) {
+            throw new MyriadSoapException('class should extend FunctionsSet');
         }
 
         return new $class($this);
@@ -44,9 +44,8 @@ class MyriadApi
     public function __call($method, $arguments)
     {
         if (strlen($method) > 5
-             && ! empty($arguments[0]) && is_array($arguments[0])
-             && substr($method, 0, 5) === "SOAP_") {
-            return $this->call($method, $arguments[0]);
+            && substr($method, 0, 5) === 'SOAP_') {
+            return $this->call($method, $arguments[0]??[]);
         }
 
         throw new \BadMethodCallException("Method {$method} not exists");
@@ -116,7 +115,7 @@ class MyriadApi
     public function mockClient()
     {
         if (class_exists('\Mockery')) {
-            $mock = \Mockery::mock(get_class($this->client));
+            $mock         = \Mockery::mock(get_class($this->client));
             $this->client = $mock;
 
             return $this->client;

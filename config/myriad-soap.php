@@ -3,7 +3,7 @@
 return [
     'options' => [
         'location' => env('MYRIAD_SOAP_LOCATION', 'http://00.00.00.00:1234/soap'),
-        'uri' => env('MYRIAD_SOAP_URI', 'forge'),
+        'uri'      => env('MYRIAD_SOAP_URI', 'forge'),
 
         // Stuff for development.
         'trace'          => env('MYRIAD_SOAP_LOGIN', true),
