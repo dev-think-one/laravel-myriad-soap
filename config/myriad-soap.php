@@ -1,8 +1,16 @@
 <?php
 
 return [
-    // https://bugs.php.net/bug.php?id=60329
+    /*
+     * See https://bugs.php.net/bug.php?id=60329
+     */
     'use_http_version_1' => true,
+
+    /*
+     * Soap response can return array, object or single value.
+     * To convert objects to array, please set value to true.
+     */
+    'format_response' => true,
 
     'options' => [
         'location' => env('MYRIAD_SOAP_LOCATION', 'http://00.00.00.00:1234/soap'),

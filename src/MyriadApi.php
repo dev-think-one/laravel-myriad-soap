@@ -3,6 +3,7 @@
 
 namespace MyriadSoap;
 
+use Illuminate\Support\Facades\Config;
 use MyriadSoap\Endpoints\FunctionsSet;
 
 class MyriadApi
@@ -44,8 +45,8 @@ class MyriadApi
     public function __call($method, $arguments)
     {
         if (strlen($method) > 5
-            && substr($method, 0, 5) === 'SOAP_') {
-            return $this->call($method, $arguments[0]??[]);
+             && substr($method, 0, 5) === 'SOAP_') {
+            return $this->call($method, $arguments[0] ?? []);
         }
 
         throw new \BadMethodCallException("Method {$method} not exists");
@@ -64,6 +65,10 @@ class MyriadApi
 
         if ($this->isFault($response)) {
             throw new MyriadSoapException($this->faultString($response), $method, $parameters);
+        }
+
+        if ((bool) Config::get('myriad-soap.format_response', false)) {
+            $response = json_decode(json_encode($response), true);
         }
 
         return $response;
