@@ -64,6 +64,14 @@ class MyriadApi
                     $arguments[1] ?? [],
                     $arguments[2] ?? Str::singular(Str::after($method, 'SOAP_get'))
                 );
+            } elseif (Str::endsWith($method, '_AssocCollection')) {
+                $method = Str::beforeLast($method, '_AssocCollection');
+
+                return $this->assocListResponseToCollection(
+                    $this->call($method, $arguments[0] ?? []),
+                    $arguments[1] ?? [],
+                    $arguments[2] ?? Str::singular(Str::after($method, 'SOAP_get'))
+                );
             } else {
                 return $this->call($method, $arguments[0] ?? []);
             }
@@ -131,16 +139,16 @@ class MyriadApi
         $array = $this->listResponseToArray($response, !empty($keys) ? count($keys) - 1 : 0, $wrapperKey);
 
         return collect($array)
-            ->map(function ($communication) use ($keys) {
-                $communicationParts = collect(explode(';', $communication))
+            ->map(function ($collected) use ($keys) {
+                $collectedParts = collect(explode(';', $collected))
                     ->map(fn ($part) => trim($part))
                     ->filter();
-                if ($communicationParts->count() == count($keys)) {
+                if ($collectedParts->count() == count($keys)) {
                     try {
                         $item = [];
                         $counter = 0;
                         foreach ($keys as $key => $callback) {
-                            $value = $communicationParts->get($counter);
+                            $value = $collectedParts->get($counter);
                             if (is_callable($callback)) {
                                 $item[$key] = call_user_func($callback, $value);
                             } else {
@@ -152,6 +160,73 @@ class MyriadApi
                         return $item;
                     } catch (UnexpectedTypeException) {
                     }
+                }
+
+                return null;
+            })->filter()->values();
+    }
+
+    /**
+     * Convert possibles myriad associative responses formats to array.
+     *
+     * @param  mixed  $response
+     * @param  string  $wrapperKey
+     * @return array
+     */
+    public function assocListResponseToArray(mixed $response, string $wrapperKey = 'Items'): array
+    {
+        $formattedArray = [];
+        if (is_array($response)) {
+            if (isset($response[$wrapperKey])
+                && is_array($response[$wrapperKey])) {
+                foreach ($response[$wrapperKey] as $listItem) {
+                    $formattedArray = array_merge($formattedArray, $this->assocListResponseToArray($listItem, $wrapperKey));
+                }
+            } else {
+                $formattedArray = array_merge($formattedArray, [$response]);
+            }
+        }
+
+        return $formattedArray;
+    }
+
+    /**
+     * Convert possibles myriad assoc responses formats to collection.
+     *
+     * @param  mixed  $response
+     * @param  array  $keys
+     * @param  string  $wrapperKey
+     * @return \Illuminate\Support\Collection
+     */
+    public function assocListResponseToCollection(mixed $response, array $keys, string $wrapperKey = 'Items'): \Illuminate\Support\Collection
+    {
+        $array = $this->assocListResponseToArray($response, $wrapperKey);
+
+        return collect($array)
+            ->map(function ($collected) use ($keys) {
+                if (!is_array($collected)) {
+                    return null;
+                }
+                if (count($collected) < count($keys)) {
+                    return null;
+                }
+
+                try {
+                    $item = [];
+                    foreach ($keys as $key => $callback) {
+                        if (!is_callable($callback)) {
+                            $key = $callback;
+                            $callback = null;
+                        }
+                        if (!array_key_exists($key, $collected)) {
+                            return null;
+                        }
+
+                        $item[$key] = is_callable($callback) ? call_user_func($callback, $collected[$key]) : $collected[$key];
+                    }
+
+                    return $item;
+                } catch (UnexpectedTypeException) {
                 }
 
                 return null;
