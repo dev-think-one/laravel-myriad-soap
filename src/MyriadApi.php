@@ -4,6 +4,7 @@
 namespace MyriadSoap;
 
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Str;
 use MyriadSoap\Endpoints\FunctionsSet;
 
 class MyriadApi
@@ -13,7 +14,7 @@ class MyriadApi
     /**
      * MyriadManager constructor.
      *
-     * @param MyriadSoapClient $client
+     * @param  MyriadSoapClient  $client
      */
     public function __construct(MyriadSoapClient $client)
     {
@@ -21,7 +22,7 @@ class MyriadApi
     }
 
     /**
-     * @param string $class
+     * @param  string  $class
      *
      * @return mixed
      * @throws MyriadSoapException
@@ -45,16 +46,26 @@ class MyriadApi
     public function __call($method, $arguments)
     {
         if (strlen($method) > 5
-             && substr($method, 0, 5) === 'SOAP_') {
-            return $this->call($method, $arguments[0] ?? []);
+            && Str::startsWith($method, 'SOAP_')) {
+            if (Str::endsWith($method, '_List')) {
+                $method = Str::beforeLast($method, '_List');
+
+                return $this->listResponseToArray(
+                    $this->call($method, $arguments[0] ?? []),
+                    $arguments[1] ?? 0,
+                    $arguments[2] ?? Str::singular(Str::after($method, 'SOAP_get'))
+                );
+            } else {
+                return $this->call($method, $arguments[0] ?? []);
+            }
         }
 
         throw new \BadMethodCallException("Method {$method} not exists");
     }
 
     /**
-     * @param string $method
-     * @param array $parameters
+     * @param  string  $method
+     * @param  array  $parameters
      *
      * @return mixed|array
      * @throws MyriadSoapException
@@ -75,7 +86,31 @@ class MyriadApi
     }
 
     /**
-     * @param array $params
+     * Convert possibles myriad responses formats to array.
+     *
+     * @param  mixed  $response
+     * @param  string  $wrapperKey
+     * @param  int  $separatorsCount
+     * @return array
+     */
+    public function listResponseToArray(mixed $response, int $separatorsCount = 0, string $wrapperKey = 'Items'): array
+    {
+        $formattedArray = [];
+        if (is_string($response) && Str::substrCount($response, ';') == $separatorsCount) {
+            $formattedArray[] = $response;
+        } elseif (is_array($response)
+                  && isset($response[$wrapperKey])
+                  && is_array($response[$wrapperKey])) {
+            foreach ($response[$wrapperKey] as $listItem) {
+                $formattedArray = array_merge($formattedArray, $this->listResponseToArray($listItem, $separatorsCount));
+            }
+        }
+
+        return $formattedArray;
+    }
+
+    /**
+     * @param  array  $params
      *
      * @return array
      */
@@ -91,7 +126,7 @@ class MyriadApi
     }
 
     /**
-     * @param mixed|array $response
+     * @param  mixed|array  $response
      *
      * @return bool
      */
@@ -101,13 +136,13 @@ class MyriadApi
     }
 
     /**
-     * @param array $response
+     * @param  array  $response
      *
      * @return string
      */
     protected function faultString(array $response): string
     {
-        return 'MyriadSoapError [' . ($response['faultcode'] ?? '-') . ']: ' . ($response['faultstring'] ?? '');
+        return 'MyriadSoapError ['.($response['faultcode'] ?? '-').']: '.($response['faultstring'] ?? '');
     }
 
 

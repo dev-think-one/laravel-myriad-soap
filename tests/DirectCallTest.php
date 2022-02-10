@@ -63,4 +63,11 @@ class DirectCallTest extends TestCase
         $this->expectException(\TypeError::class);
         MyriadSoap::SOAP_getContactCommunications('not_array');
     }
+
+    /** @test */
+    public function should_be_correct_prefix()
+    {
+        $this->expectException(\BadMethodCallException::class);
+        MyriadSoap::SOAPgetContactCommunications();
+    }
 }

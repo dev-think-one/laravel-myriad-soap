@@ -1,5 +1,12 @@
 # Laravel: Myriad SOAP
 
+![Packagist License](https://img.shields.io/packagist/l/yaroslawww/laravel-myriad-soap?color=%234dc71f)
+[![Packagist Version](https://img.shields.io/packagist/v/yaroslawww/laravel-myriad-soap)](https://packagist.org/packages/yaroslawww/laravel-myriad-soap)
+[![Total Downloads](https://img.shields.io/packagist/dt/yaroslawww/laravel-myriad-soap)](https://packagist.org/packages/yaroslawww/laravel-myriad-soap)
+[![Build Status](https://scrutinizer-ci.com/g/yaroslawww/laravel-myriad-soap/badges/build.png?b=master)](https://scrutinizer-ci.com/g/yaroslawww/laravel-myriad-soap/build-status/master)
+[![Code Coverage](https://scrutinizer-ci.com/g/yaroslawww/laravel-myriad-soap/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/yaroslawww/laravel-myriad-soap/?branch=master)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/yaroslawww/laravel-myriad-soap/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/yaroslawww/laravel-myriad-soap/?branch=master)
+
 Unofficial web integration with Myriad 5.1
 
 ## Installation
@@ -26,6 +33,20 @@ $result = MyriadSoap::SOAP_getContactCommunications(['Contact_ID' => 1234]);
  ],
 ]
  */
+```
+
+By default Myriad lists responses has unexpected lists responses, that why will be useful helper:
+
+```php
+MyriadSoap::listResponseToArray(
+    MyriadSoap::SOAP_getContactCommunications(['Contact_ID' => 1234]), 
+    3, 
+    'CommunicationItem'
+);
+// or
+MyriadSoap::SOAP_getContactCommunications_List(['Contact_ID' => 1234], 3, 'ContactCommunication');
+// Appropriate key, app will try guess itself:
+MyriadSoap::SOAP_getContactCommunications_List(['Contact_ID' => 1234], 3);
 ```
 
 Using feature sets that allow you to wrap your own business logic (each class should `extends FunctionsSet`)
