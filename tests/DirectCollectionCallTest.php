@@ -5,6 +5,7 @@ namespace MyriadSoap\Tests;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
+use MyriadSoap\Exceptions\UnexpectedTypeException;
 use MyriadSoap\MyriadSoap;
 use MyriadSoap\MyriadSoapException;
 
@@ -13,7 +14,7 @@ class DirectCollectionCallTest extends TestCase
     protected function collectionFormat(): array
     {
         return [
-            'ContactCommunication_ID' => fn ($i) => (int) $i,
+            'ContactCommunication_ID' => fn ($i) => (int) tap($i, fn () => throw_if(!is_numeric($i), UnexpectedTypeException::class)),
             'DespatchType_ID'         => fn ($i) => (int) $i,
             'ContactCommunication',
             'PrimaryUse' => fn ($i) => $i == 'Yes',
@@ -46,6 +47,7 @@ class DirectCollectionCallTest extends TestCase
                 '410839;12;01279 506193;No',
                 '410840;14;bar.tr@pg.com;No',
                 '410841;14;foo.tr@pg.com;Yes',
+                'WRONG;14;quz.tr@pg.com;Yes',
                 'WRONG;SEPARATORS,COUNT',
                 '410842;12;07825 978 907;Yes',
             ],
@@ -62,7 +64,7 @@ class DirectCollectionCallTest extends TestCase
         $this->assertInstanceOf(Collection::class, $result);
         $this->assertCount(4, $result);
         $this->assertEquals(Str::beforeLast($response['ContactCommunication'][0], ';').';', implode(';', $result->first()));
-        $this->assertEquals(Str::beforeLast($response['ContactCommunication'][4], ';').';1', implode(';', $result->get(3)));
+        $this->assertEquals(Str::beforeLast($response['ContactCommunication'][5], ';').';1', implode(';', $result->get(3)));
     }
 
     /** @test */

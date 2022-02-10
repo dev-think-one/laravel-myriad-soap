@@ -6,6 +6,7 @@ namespace MyriadSoap;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
 use MyriadSoap\Endpoints\FunctionsSet;
+use MyriadSoap\Exceptions\UnexpectedTypeException;
 
 class MyriadApi
 {
@@ -135,23 +136,26 @@ class MyriadApi
                     ->map(fn ($part) => trim($part))
                     ->filter();
                 if ($communicationParts->count() == count($keys)) {
-                    $item = [];
-                    $counter = 0;
-                    foreach ($keys as $key => $callback) {
-                        $value = $communicationParts->get($counter);
-                        if (is_callable($callback)) {
-                            $item[$key] = call_user_func($callback, $value);
-                        } else {
-                            $item[$callback] = $value;
+                    try {
+                        $item = [];
+                        $counter = 0;
+                        foreach ($keys as $key => $callback) {
+                            $value = $communicationParts->get($counter);
+                            if (is_callable($callback)) {
+                                $item[$key] = call_user_func($callback, $value);
+                            } else {
+                                $item[$callback] = $value;
+                            }
+                            $counter++;
                         }
-                        $counter++;
-                    }
 
-                    return $item;
+                        return $item;
+                    } catch (UnexpectedTypeException) {
+                    }
                 }
 
                 return null;
-            })->filter();
+            })->filter()->values();
     }
 
     /**

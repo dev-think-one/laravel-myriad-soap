@@ -69,7 +69,7 @@ MyriadSoap::SOAP_getContactCommunications_Collection(['Contact_ID' => 1234], [
     ], 'ContactCommunication');
 // Appropriate key, app will try guess itself:
 MyriadSoap::SOAP_getContactCommunications_Collection(['Contact_ID' => 1234], [
-        'ContactCommunication_ID' => fn($i) => (int) $i,
+        'ContactCommunication_ID' => fn ($i) => (int) tap($i, fn () => throw_if(!is_numeric($i), \MyriadSoap\Exceptions\UnexpectedTypeException::class)),
         'DespatchType_ID' => fn($i) => (int) $i,
         'ContactCommunication',
         'PrimaryUse'              => fn($i) => $i == 'Yes',
