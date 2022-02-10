@@ -55,6 +55,14 @@ class MyriadApi
                     $arguments[1] ?? 0,
                     $arguments[2] ?? Str::singular(Str::after($method, 'SOAP_get'))
                 );
+            } elseif (Str::endsWith($method, '_Collection')) {
+                $method = Str::beforeLast($method, '_Collection');
+
+                return $this->listResponseToCollection(
+                    $this->call($method, $arguments[0] ?? []),
+                    $arguments[1] ?? [],
+                    $arguments[2] ?? Str::singular(Str::after($method, 'SOAP_get'))
+                );
             } else {
                 return $this->call($method, $arguments[0] ?? []);
             }
@@ -89,8 +97,8 @@ class MyriadApi
      * Convert possibles myriad responses formats to array.
      *
      * @param  mixed  $response
-     * @param  string  $wrapperKey
      * @param  int  $separatorsCount
+     * @param  string  $wrapperKey
      * @return array
      */
     public function listResponseToArray(mixed $response, int $separatorsCount = 0, string $wrapperKey = 'Items'): array
@@ -107,6 +115,43 @@ class MyriadApi
         }
 
         return $formattedArray;
+    }
+
+    /**
+     * Convert possibles myriad responses formats to collection.
+     *
+     * @param  mixed  $response
+     * @param  array  $keys
+     * @param  string  $wrapperKey
+     * @return \Illuminate\Support\Collection
+     */
+    public function listResponseToCollection(mixed $response, array $keys, string $wrapperKey = 'Items'): \Illuminate\Support\Collection
+    {
+        $array = $this->listResponseToArray($response, !empty($keys) ? count($keys) - 1 : 0, $wrapperKey);
+
+        return collect($array)
+            ->map(function ($communication) use ($keys) {
+                $communicationParts = collect(explode(';', $communication))
+                    ->map(fn ($part) => trim($part))
+                    ->filter();
+                if ($communicationParts->count() == count($keys)) {
+                    $item = [];
+                    $counter = 0;
+                    foreach ($keys as $key => $callback) {
+                        $value = $communicationParts->get($counter);
+                        if (is_callable($callback)) {
+                            $item[$key] = call_user_func($callback, $value);
+                        } else {
+                            $item[$callback] = $value;
+                        }
+                        $counter++;
+                    }
+
+                    return $item;
+                }
+
+                return null;
+            })->filter();
     }
 
     /**

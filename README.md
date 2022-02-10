@@ -35,7 +35,7 @@ $result = MyriadSoap::SOAP_getContactCommunications(['Contact_ID' => 1234]);
  */
 ```
 
-By default Myriad lists responses has unexpected lists responses, that why will be useful helper:
+By default, Myriad lists responses has unexpected lists responses, that why will be useful helper:
 
 ```php
 MyriadSoap::listResponseToArray(
@@ -46,6 +46,34 @@ MyriadSoap::listResponseToArray(
 MyriadSoap::SOAP_getContactCommunications_List(['Contact_ID' => 1234], 3, 'ContactCommunication');
 // Appropriate key, app will try guess itself:
 MyriadSoap::SOAP_getContactCommunications_List(['Contact_ID' => 1234], 3);
+```
+
+Or convert response to collection:
+
+```php
+MyriadSoap::listResponseToCollection(
+    MyriadSoap::SOAP_getContactCommunications(['Contact_ID' => 1234]), 
+    [
+        'ContactCommunication_ID' => fn($i) => (int) $i,
+        'DespatchType_ID' => fn($i) => (int) $i,
+        'ContactCommunication',
+        'PrimaryUse'              => fn($i) => $i == 'Yes',
+    ], 'ContactCommunication'
+);
+// or
+MyriadSoap::SOAP_getContactCommunications_Collection(['Contact_ID' => 1234], [
+        'ContactCommunication_ID' => fn($i) => (int) $i,
+        'DespatchType_ID' => fn($i) => (int) $i,
+        'ContactCommunication',
+        'PrimaryUse'              => fn($i) => $i == 'Yes',
+    ], 'ContactCommunication');
+// Appropriate key, app will try guess itself:
+MyriadSoap::SOAP_getContactCommunications_Collection(['Contact_ID' => 1234], [
+        'ContactCommunication_ID' => fn($i) => (int) $i,
+        'DespatchType_ID' => fn($i) => (int) $i,
+        'ContactCommunication',
+        'PrimaryUse'              => fn($i) => $i == 'Yes',
+    ]);
 ```
 
 Using feature sets that allow you to wrap your own business logic (each class should `extends FunctionsSet`)
