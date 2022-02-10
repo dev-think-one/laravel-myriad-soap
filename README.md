@@ -40,8 +40,7 @@ By default Myriad lists responses has unexpected lists responses, that why will 
 ```php
 MyriadSoap::listResponseToArray(
     MyriadSoap::SOAP_getContactCommunications(['Contact_ID' => 1234]), 
-    3, 
-    'CommunicationItem'
+    3, 'ContactCommunication'
 );
 // or
 MyriadSoap::SOAP_getContactCommunications_List(['Contact_ID' => 1234], 3, 'ContactCommunication');
