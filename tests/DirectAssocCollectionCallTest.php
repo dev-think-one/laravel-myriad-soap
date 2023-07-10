@@ -13,7 +13,7 @@ class DirectAssocCollectionCallTest extends TestCase
     {
         return [
             'OrderPackageType_ID' => fn ($i) => (int) tap($i, fn () => throw_if(!is_numeric($i), UnexpectedTypeException::class)),
-            'OrderPackageType'    => fn ($i)    => (string) $i,
+            'OrderPackageType'    => fn ($i) => (string) $i,
             'OrderPackageCategory',
         ];
     }

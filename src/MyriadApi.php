@@ -145,7 +145,7 @@ class MyriadApi
                     ->filter();
                 if ($collectedParts->count() == count($keys)) {
                     try {
-                        $item = [];
+                        $item    = [];
                         $counter = 0;
                         foreach ($keys as $key => $callback) {
                             $value = $collectedParts->get($counter);
@@ -215,7 +215,7 @@ class MyriadApi
                     $item = [];
                     foreach ($keys as $key => $callback) {
                         if (!is_callable($callback)) {
-                            $key = $callback;
+                            $key      = $callback;
                             $callback = null;
                         }
                         if (!array_key_exists($key, $collected)) {
