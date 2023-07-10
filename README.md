@@ -3,9 +3,9 @@
 ![Packagist License](https://img.shields.io/packagist/l/yaroslawww/laravel-myriad-soap?color=%234dc71f)
 [![Packagist Version](https://img.shields.io/packagist/v/yaroslawww/laravel-myriad-soap)](https://packagist.org/packages/yaroslawww/laravel-myriad-soap)
 [![Total Downloads](https://img.shields.io/packagist/dt/yaroslawww/laravel-myriad-soap)](https://packagist.org/packages/yaroslawww/laravel-myriad-soap)
-[![Build Status](https://scrutinizer-ci.com/g/yaroslawww/laravel-myriad-soap/badges/build.png?b=master)](https://scrutinizer-ci.com/g/yaroslawww/laravel-myriad-soap/build-status/master)
-[![Code Coverage](https://scrutinizer-ci.com/g/yaroslawww/laravel-myriad-soap/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/yaroslawww/laravel-myriad-soap/?branch=master)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/yaroslawww/laravel-myriad-soap/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/yaroslawww/laravel-myriad-soap/?branch=master)
+[![Build Status](https://scrutinizer-ci.com/g/yaroslawww/laravel-myriad-soap/badges/build.png?b=main)](https://scrutinizer-ci.com/g/yaroslawww/laravel-myriad-soap/build-status/main)
+[![Code Coverage](https://scrutinizer-ci.com/g/yaroslawww/laravel-myriad-soap/badges/coverage.png?b=main)](https://scrutinizer-ci.com/g/yaroslawww/laravel-myriad-soap/?branch=main)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/yaroslawww/laravel-myriad-soap/badges/quality-score.png?b=main)](https://scrutinizer-ci.com/g/yaroslawww/laravel-myriad-soap/?branch=main)
 
 Unofficial web integration with Myriad 5.1
 
