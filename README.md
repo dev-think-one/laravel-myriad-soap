@@ -1,11 +1,11 @@
 # Laravel: Myriad SOAP
 
-![Packagist License](https://img.shields.io/packagist/l/yaroslawww/laravel-myriad-soap?color=%234dc71f)
-[![Packagist Version](https://img.shields.io/packagist/v/yaroslawww/laravel-myriad-soap)](https://packagist.org/packages/yaroslawww/laravel-myriad-soap)
-[![Total Downloads](https://img.shields.io/packagist/dt/yaroslawww/laravel-myriad-soap)](https://packagist.org/packages/yaroslawww/laravel-myriad-soap)
-[![Build Status](https://scrutinizer-ci.com/g/yaroslawww/laravel-myriad-soap/badges/build.png?b=main)](https://scrutinizer-ci.com/g/yaroslawww/laravel-myriad-soap/build-status/main)
-[![Code Coverage](https://scrutinizer-ci.com/g/yaroslawww/laravel-myriad-soap/badges/coverage.png?b=main)](https://scrutinizer-ci.com/g/yaroslawww/laravel-myriad-soap/?branch=main)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/yaroslawww/laravel-myriad-soap/badges/quality-score.png?b=main)](https://scrutinizer-ci.com/g/yaroslawww/laravel-myriad-soap/?branch=main)
+![Packagist License](https://img.shields.io/packagist/l/think.studio/laravel-myriad-soap?color=%234dc71f)
+[![Packagist Version](https://img.shields.io/packagist/v/think.studio/laravel-myriad-soap)](https://packagist.org/packages/think.studio/laravel-myriad-soap)
+[![Total Downloads](https://img.shields.io/packagist/dt/think.studio/laravel-myriad-soap)](https://packagist.org/packages/think.studio/laravel-myriad-soap)
+[![Build Status](https://scrutinizer-ci.com/g/dev-think-one/laravel-myriad-soap/badges/build.png?b=main)](https://scrutinizer-ci.com/g/dev-think-one/laravel-myriad-soap/build-status/main)
+[![Code Coverage](https://scrutinizer-ci.com/g/dev-think-one/laravel-myriad-soap/badges/coverage.png?b=main)](https://scrutinizer-ci.com/g/dev-think-one/laravel-myriad-soap/?branch=main)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/dev-think-one/laravel-myriad-soap/badges/quality-score.png?b=main)](https://scrutinizer-ci.com/g/dev-think-one/laravel-myriad-soap/?branch=main)
 
 Unofficial web integration with Myriad 5.1
 
@@ -14,7 +14,7 @@ Unofficial web integration with Myriad 5.1
 You can install the package via composer:
 
 ```bash
-composer require yaroslawww/laravel-myriad-soap
+composer require think.studio/laravel-myriad-soap
 
 php artisan vendor:publish --provider="MyriadSoap\ServiceProvider" --tag="config"
 ```
@@ -26,13 +26,13 @@ Direct call via facade:
 ```injectablephp
 $result = MyriadSoap::SOAP_getContactCommunications(['Contact_ID' => 1234]);
 /*
-[
- "ContactCommunication" => [
-   "123456;12;01234 567 890;Yes",
-   "123457;14;me@test.co.uk;No",
- ],
-]
- */
+    [
+     "ContactCommunication" => [
+       "123456;12;01234 567 890;Yes",
+       "123457;14;me@test.co.uk;No",
+     ],
+    ]
+*/
 ```
 
 By default, Myriad lists responses has unexpected string lists responses, that why will be useful helper:

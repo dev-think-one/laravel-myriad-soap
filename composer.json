@@ -1,24 +1,24 @@
 {
-    "name": "yaroslawww/laravel-myriad-soap",
+    "name": "think.studio/laravel-myriad-soap",
     "description": "Unofficial web integration with Myriad 5.1",
     "keywords": [
         "emyriad",
         "myriad-soap"
     ],
-    "homepage": "https://github.com/yaroslawww/laravel-myriad-soap",
+    "homepage": "https://github.com/dev-think-one/laravel-myriad-soap",
     "license": "MIT",
     "authors": [
         {
             "name": "Yaroslav Georgitsa",
-            "email": "yaroslav.georgitsa@gmail.com",
+            "email": "yg@think.studio",
             "homepage": "https://github.com/yaroslawww",
             "role": "Developer"
         }
     ],
     "require": {
+        "ext-soap": "*",
         "php": "^8.0",
-        "illuminate/support": "^9.0|^10.0",
-        "ext-soap": "*"
+        "illuminate/support": "^9.0|^10.0"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.20",
